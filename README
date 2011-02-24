@@ -1,0 +1,4 @@
+Once upon a time waaaayyy back in 2000 I was working on a project with quadrature encoders.
+I did this software in PostScript to generate a custom disk.
+If you're on a Mac just double click disk.ps and the disk is generated or you can use 
+GhostScript http://pages.cs.wisc.edu/~ghost/

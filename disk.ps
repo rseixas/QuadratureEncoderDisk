@@ -1,0 +1,160 @@
+%!PS-Adobe-2.0
+%%Title: Encoder Disk  
+%%Creator: (C) Ricardo Seixas - rseixas@gmail.com 
+%%CreationDate: May 12 2000
+%%EndComments
+% You can freely distribute and use this file as long as you maintain the original copyright 
+% This file is provided as is and there's NO WARRANTY
+% Use it at your own risk
+
+/mm {2.8346 mul} def   
+/pi 3.1415926536 def   
+
+%
+%
+%Here you can change the encoder characteristics
+
+/slots 45 def
+/external_diameter 50 mm def
+
+/internal_diameter external_diameter 10 mm sub def
+%/internal_diameter 45 mm def   
+/text ( Ricardo Seixas 2000 - rseixas@gmail.com - Encoder Disc ) def 	% don't remove the parentheses when you change text!!!  
+/text_diameter internal_diameter 2 mm sub def
+%/text_diameter 43 mm def
+/font_size external_diameter 20 div def 
+%/font_size 6 def
+/font_type (Courier) def
+%/internal_circle 38 mm def
+/internal_circle internal_diameter font_size mm sub def
+%
+%
+%
+%Look at the end of the file for positioning
+
+
+/angle {360 slots div} def
+/trace_width {internal_diameter pi mul slots div 2 div} def
+/center_hole {
+
+	%Cross
+	-11 mm 0 moveto 22 mm 0 rlineto 0.2 setlinewidth stroke
+	0 -11 mm moveto 0 22 mm rlineto 0.2 setlinewidth stroke
+
+	%Bulls Eye 6 mm
+	0 0 6 mm 2 div
+	0 360 arc .2 setlinewidth stroke  
+	%Bulls Eye 8 mm
+	0 0 8 mm 2 div
+	0 360 arc .2 setlinewidth stroke  
+	%Bulls Eye 10 mm
+	0 0 10 mm 2 div
+	0 360 arc .2 setlinewidth stroke  
+	%Bulls Eye 20 mm
+	0 0 20 mm 2 div
+	0 360 arc .2 setlinewidth stroke 
+	
+	%Draw internal circle
+	%Comment the two lines below if you don't want internal circle before font  	
+
+	0 0 internal_circle 2 div
+	0 360 arc .05 setlinewidth stroke 
+	 
+	%Draw internal_diameter circle
+	%Comment the two lines below if you don't want internal circle after font  	
+
+	0 0 internal_diameter 2 div
+	0 360 arc .05 setlinewidth stroke 
+
+	%Draw External Circle
+	%Comment the two lines below if you don't want external line  	
+
+	0 0 external_diameter 2 div
+	0 360 arc .05 mm setlinewidth stroke 
+	
+	
+	} def
+%Don't mess around here unless you know what you're doing
+/Draw_Disc {
+		0 0 moveto  
+		gsave
+		angle 2 div rotate
+		
+		0 angle 360
+		 	{
+			gsave 
+			rotate
+			internal_diameter 2 div 0 rmoveto
+			external_diameter internal_diameter sub 2 div 0 rlineto
+			trace_width setlinewidth
+			stroke
+			grestore
+			} for
+		grestore
+		center_hole
+		} def
+
+
+
+% Text routine borrowed from Adobe Blue Book Program 10, on page 167
+/insidecircletext
+  { circtextdict begin
+	  /radius exch def  /centerangle exch def
+	  /ptsize exch def  /str exch def
+	  
+	  /xradius radius ptsize 3 div sub def
+	  gsave
+	    centerangle str findhalfangle sub rotate
+	    str
+		  { /charcode exch def
+		    ( ) dup 0 charcode put insideplacechar
+		  } forall
+	  grestore
+	end
+  } def
+  
+/circtextdict 16 dict def
+circtextdict begin
+/findhalfangle
+	{ stringwidth pop 2 div
+	  2 xradius mul pi mul div 360 mul
+	} def
+	
+/insideplacechar
+  { /char exch def
+	/halfangle char findhalfangle def
+	gsave
+	  halfangle rotate
+	  radius 0 translate
+	  90 rotate
+	  char stringwidth pop 2 div neg 0 moveto
+	  char show
+	grestore
+	halfangle 2 mul rotate
+  } def
+  
+end
+
+
+/font_type findfont font_size scalefont setfont
+/Encoder_Text {
+		text 18 -90 text_diameter 2 div insidecircletext
+	       } def	
+
+/Draw_Encoder {
+	  Draw_Disc
+	  %Comment next line to remove text
+	  Encoder_Text
+	  } def
+
+%Here you can change where you want to put the disk on the sheet
+%TODO automagicaly fill a A4 or A3 sheet
+
+%automatic placement
+external_diameter 2 div 15 mm add external_diameter 2 div 15 mm add translate Draw_Encoder
+
+%manual placement, you can put more than one encoder on the same sheet				
+%30 mm 30 mm translate Draw_Encoder
+%52 mm 0 mm translate Draw_Encoder
+
+showpage
